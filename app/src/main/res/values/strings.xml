@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">拦截助手</string>
+    <string name="tab_call">电话拦截</string>
+    <string name="tab_sms">短信拦截</string>
+    <string name="tab_ad">广告拦截</string>
+    <string name="btn_call_role">授权来电拦截</string>
+    <string name="btn_ad_block">开启广告拦截</string>
+    <string name="btn_add_blacklist">添加黑名单</string>
+    <string name="btn_add_ad_domain">添加广告域名</string>
+    <string name="btn_clear">清空记录</string>
+</resources>

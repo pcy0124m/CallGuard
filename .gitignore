@@ -1,0 +1,13 @@
+# Android / IntelliJ
+*.iml
+.gradle/
+local.properties
+.idea/
+build/
+app/build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# APK 产物（如需把 APK 一并入库可删除此行）
+# *.apk
