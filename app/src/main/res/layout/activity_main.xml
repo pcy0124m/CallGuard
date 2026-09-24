@@ -2,135 +2,302 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/page_bg"
     android:orientation="vertical">
 
-    <TextView
+    <!-- 渐变头部：标题 + 状态 -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="@string/app_name"
-        android:textColor="@color/primary"
-        android:textSize="22sp"
-        android:textStyle="bold" />
+        android:background="@drawable/bg_header"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="18dp">
 
-    <TextView
-        android:id="@+id/tvStatus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="8dp"
-        android:textSize="13sp"
-        android:textColor="@color/text_gray"
-        android:text="状态检测中…" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🛡 拦截助手"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-    <!-- 三个标签页切换按钮：电话 / 短信 / 广告 -->
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textSize="12sp"
+            android:textColor="#CCFFFFFF"
+            android:text="状态检测中…" />
+    </LinearLayout>
+
+    <!-- 拦截数据统计卡片 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp">
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="12dp">
 
-        <Button
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="4dp"
+            android:background="@drawable/bg_card"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/statCall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/primary"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📞 来电拦截"
+                android:textSize="11sp"
+                android:textColor="@color/text_gray" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="4dp"
+            android:background="@drawable/bg_card"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/statSms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/primary"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="💬 短信拦截"
+                android:textSize="11sp"
+                android:textColor="@color/text_gray" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="4dp"
+            android:background="@drawable/bg_card"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/statAd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/primary"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🚫 广告拦截"
+                android:textSize="11sp"
+                android:textColor="@color/text_gray" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 胶囊式标签切换 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_tab_container"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <TextView
             android:id="@+id/tabCall"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="4dp"
-            android:text="@string/tab_call"
+            android:gravity="center"
+            android:padding="9dp"
+            android:text="📞 电话"
             android:textSize="13sp"
-            android:backgroundTint="@color/primary"
-            android:textColor="#FFFFFF" />
+            android:textStyle="bold"
+            android:textColor="@color/primary"
+            android:background="@drawable/bg_tab_selected" />
 
-        <Button
+        <TextView
             android:id="@+id/tabSms"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="4dp"
-            android:text="@string/tab_sms"
+            android:gravity="center"
+            android:padding="9dp"
+            android:text="💬 短信"
             android:textSize="13sp"
-            android:backgroundTint="#DDDDDD"
-            android:textColor="#333333" />
+            android:textColor="@color/text_gray" />
 
-        <Button
+        <TextView
             android:id="@+id/tabAd"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="4dp"
-            android:text="@string/tab_ad"
+            android:gravity="center"
+            android:padding="9dp"
+            android:text="🚫 广告"
             android:textSize="13sp"
-            android:backgroundTint="#DDDDDD"
-            android:textColor="#333333" />
+            android:textColor="@color/text_gray" />
     </LinearLayout>
 
+    <!-- 操作按钮 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp">
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:layout_marginTop="8dp">
 
-        <Button
+        <TextView
             android:id="@+id/btnCallRole"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="4dp"
-            android:text="@string/btn_call_role"
-            android:textSize="12sp" />
+            android:background="@drawable/bg_btn"
+            android:gravity="center"
+            android:padding="9dp"
+            android:text="🔑 授权来电拦截"
+            android:textSize="12sp"
+            android:textColor="@color/text_dark" />
 
-        <Button
+        <TextView
             android:id="@+id/btnAdBlock"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="4dp"
-            android:text="@string/btn_ad_block"
-            android:textSize="12sp" />
+            android:background="@drawable/bg_btn_primary"
+            android:gravity="center"
+            android:padding="9dp"
+            android:text="🚀 开启广告拦截"
+            android:textSize="12sp"
+            android:textColor="#FFFFFF" />
 
-        <Button
+        <TextView
             android:id="@+id/btnClear"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="4dp"
-            android:text="@string/btn_clear"
-            android:textSize="12sp" />
+            android:background="@drawable/bg_btn"
+            android:gravity="center"
+            android:padding="9dp"
+            android:text="🧹 清空记录"
+            android:textSize="12sp"
+            android:textColor="@color/text_dark" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp">
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp">
 
-        <Button
+        <TextView
             android:id="@+id/btnAddBlacklist"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="4dp"
-            android:text="@string/btn_add_blacklist"
-            android:textSize="12sp" />
+            android:background="@drawable/bg_btn"
+            android:gravity="center"
+            android:padding="9dp"
+            android:text="➕ 添加黑名单"
+            android:textSize="12sp"
+            android:textColor="@color/text_dark" />
 
-        <Button
+        <TextView
             android:id="@+id/btnAddAdDomain"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="4dp"
-            android:text="@string/btn_add_ad_domain"
-            android:textSize="12sp" />
+            android:background="@drawable/bg_btn"
+            android:gravity="center"
+            android:padding="9dp"
+            android:text="🌐 添加广告域名"
+            android:textSize="12sp"
+            android:textColor="@color/text_dark" />
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/list"
+    <!-- 记录列表 + 空状态 -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null"
-        android:dividerHeight="0dp" />
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp" />
+
+        <LinearLayout
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🎉"
+                android:textSize="44sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="暂无拦截记录"
+                android:textSize="14sp"
+                android:textColor="@color/text_gray" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="有新的拦截信息会自动出现在这里"
+                android:textSize="12sp"
+                android:textColor="@color/text_light_gray" />
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

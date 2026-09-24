@@ -8,8 +8,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
@@ -25,13 +23,17 @@ import java.util.Locale
 
 /**
  * 主界面：三个标签页分别展示【电话拦截 / 短信拦截 / 广告拦截】的拦截记录，
- * 并提供权限授权、黑名单管理、广告域名管理和清空记录入口。
+ * 顶部统计卡片实时显示三类拦截总量，并提供权限授权、黑名单管理、
+ * 广告域名管理和清空记录入口。
  */
 class MainActivity : Activity() {
 
     private lateinit var adapter: RecordAdapter
     private lateinit var tvStatus: TextView
-    private lateinit var tabButtons: List<Button>
+    private lateinit var statCall: TextView
+    private lateinit var statSms: TextView
+    private lateinit var statAd: TextView
+    private lateinit var tabButtons: List<TextView>
     private val db by lazy { Db.get(this) }
     private val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
     private var currentTab = 0
@@ -50,22 +52,27 @@ class MainActivity : Activity() {
         setContentView(R.layout.activity_main)
 
         tvStatus = findViewById(R.id.tvStatus)
+        statCall = findViewById(R.id.statCall)
+        statSms = findViewById(R.id.statSms)
+        statAd = findViewById(R.id.statAd)
         adapter = RecordAdapter(this)
-        findViewById<ListView>(R.id.list).adapter = adapter
+        val list = findViewById<ListView>(R.id.list)
+        list.adapter = adapter
+        list.emptyView = findViewById(R.id.empty)
 
-        val btnCall = findViewById<Button>(R.id.tabCall)
-        val btnSms = findViewById<Button>(R.id.tabSms)
-        val btnAd = findViewById<Button>(R.id.tabAd)
-        tabButtons = listOf(btnCall, btnSms, btnAd)
-        btnCall.setOnClickListener { switchTab(0) }
-        btnSms.setOnClickListener { switchTab(1) }
-        btnAd.setOnClickListener { switchTab(2) }
+        val tabCall = findViewById<TextView>(R.id.tabCall)
+        val tabSms = findViewById<TextView>(R.id.tabSms)
+        val tabAd = findViewById<TextView>(R.id.tabAd)
+        tabButtons = listOf(tabCall, tabSms, tabAd)
+        tabCall.setOnClickListener { switchTab(0) }
+        tabSms.setOnClickListener { switchTab(1) }
+        tabAd.setOnClickListener { switchTab(2) }
 
-        findViewById<Button>(R.id.btnCallRole).setOnClickListener { requestCallScreeningRole() }
-        findViewById<Button>(R.id.btnAdBlock).setOnClickListener { toggleAdBlock() }
-        findViewById<Button>(R.id.btnAddBlacklist).setOnClickListener { showAddBlacklistDialog() }
-        findViewById<Button>(R.id.btnAddAdDomain).setOnClickListener { showAddAdDomainDialog() }
-        findViewById<Button>(R.id.btnClear).setOnClickListener { clearCurrentTab() }
+        findViewById<TextView>(R.id.btnCallRole).setOnClickListener { requestCallScreeningRole() }
+        findViewById<TextView>(R.id.btnAdBlock).setOnClickListener { toggleAdBlock() }
+        findViewById<TextView>(R.id.btnAddBlacklist).setOnClickListener { showAddBlacklistDialog() }
+        findViewById<TextView>(R.id.btnAddAdDomain).setOnClickListener { showAddAdDomainDialog() }
+        findViewById<TextView>(R.id.btnClear).setOnClickListener { clearCurrentTab() }
 
         switchTab(0)
         requestSmsPermissions()
@@ -86,8 +93,19 @@ class MainActivity : Activity() {
 
     private fun switchTab(index: Int) {
         currentTab = index
-        tabButtons.forEachIndexed { i, b ->
-            b.isSelected = i == index
+        adapter.icon = when (index) {
+            0 -> "📞"; 1 -> "💬"; else -> "🚫"
+        }
+        tabButtons.forEachIndexed { i, tv ->
+            if (i == index) {
+                tv.setBackgroundResource(R.drawable.bg_tab_selected)
+                tv.setTextColor(getColor(R.color.primary))
+                tv.paint.isFakeBoldText = true
+            } else {
+                tv.background = null
+                tv.setTextColor(getColor(R.color.text_gray))
+                tv.paint.isFakeBoldText = false
+            }
         }
         reloadRecords()
     }
@@ -218,36 +236,47 @@ class MainActivity : Activity() {
         Toast.makeText(this, "已清空", Toast.LENGTH_SHORT).show()
     }
 
-    /** 读取当前标签页的拦截记录并刷新列表 */
+    /** 读取拦截记录并刷新列表与统计卡片 */
     private fun reloadRecords() {
         Thread {
-            val items: List<RecordItem> = when (currentTab) {
-                0 -> db.listCalls().map {
-                    RecordItem(
-                        title = it.number,
-                        reason = "拦截原因：${it.reason}",
-                        subtitle = "来电已被自动拒接",
-                        time = sdf.format(Date(it.time))
-                    )
+            try {
+                val calls = db.listCalls()
+                val sms = db.listSms()
+                val ads = db.listAds()
+                val items: List<RecordItem> = when (currentTab) {
+                    0 -> calls.map {
+                        RecordItem(
+                            title = it.number,
+                            reason = "拦截原因：${it.reason}",
+                            subtitle = "来电已被自动拒接",
+                            time = sdf.format(Date(it.time))
+                        )
+                    }
+                    1 -> sms.map {
+                        RecordItem(
+                            title = it.sender,
+                            reason = "拦截原因：${it.reason}",
+                            subtitle = it.content,
+                            time = sdf.format(Date(it.time))
+                        )
+                    }
+                    else -> ads.map {
+                        RecordItem(
+                            title = it.domain,
+                            reason = "已拦截 ${it.count} 次广告请求",
+                            subtitle = "该域名 DNS 解析已被屏蔽",
+                            time = "最近拦截：" + sdf.format(Date(it.lastTime))
+                        )
+                    }
                 }
-                1 -> db.listSms().map {
-                    RecordItem(
-                        title = it.sender,
-                        reason = "拦截原因：${it.reason}",
-                        subtitle = it.content,
-                        time = sdf.format(Date(it.time))
-                    )
+                runOnUiThread {
+                    adapter.submit(items)
+                    statCall.text = calls.size.toString()
+                    statSms.text = sms.size.toString()
+                    statAd.text = ads.size.toString()
                 }
-                else -> db.listAds().map {
-                    RecordItem(
-                        title = it.domain,
-                        reason = "已拦截 ${it.count} 次广告请求",
-                        subtitle = "该域名 DNS 解析已被屏蔽",
-                        time = "最近拦截：" + sdf.format(Date(it.lastTime))
-                    )
-                }
+            } catch (_: Exception) {
             }
-            runOnUiThread { adapter.submit(items) }
         }.start()
     }
 
@@ -257,7 +286,7 @@ class MainActivity : Activity() {
                 ?.isRoleHeld(android.app.role.RoleManager.ROLE_CALL_SCREENING) == true
         } else false
         val adStatus = if (AdBlockVpnService.isRunning) "运行中" else "未开启"
-        tvStatus.text = "来电拦截：${if (roleHeld) "已生效" else "未授权"} ｜ 短信拦截：识别中 ｜ 广告拦截：$adStatus"
+        tvStatus.text = "来电拦截：${if (roleHeld) "✅ 已生效" else "⚠️ 未授权"}   短信拦截：✅ 识别中   广告拦截：$adStatus"
     }
 
     companion object {

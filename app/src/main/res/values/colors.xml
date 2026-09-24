@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="primary">#1E6F5C</color>
-    <color name="reason_bad">#C62828</color>
+    <color name="primary_light">#2E9E7F</color>
+    <color name="primary_bg">#E6F2EE</color>
+    <color name="page_bg">#F5F7F6</color>
+    <color name="card_stroke">#ECEFEA</color>
+    <color name="text_dark">#1B1F1D</color>
     <color name="text_gray">#8A8A8A</color>
+    <color name="text_light_gray">#AAB2AE</color>
+    <color name="reason_bad">#C62828</color>
+    <color name="reason_bad_bg">#FDECEA</color>
+    <color name="tab_container">#E8EDEA</color>
 </resources>
